@@ -57,12 +57,15 @@ void mqttReconnect(){
 
 void callback(char* topic, byte* payload, unsigned int length){
   String message = "";
-  byte angle;
   for (int i = 0; i < length; i++) {
     char c = (char)payload[i];
+    if(!isDigit(c)){
+      mqttClient.publish("servo", "Valor inválido");
+      return;
+    }
     message += c;
   }
-  angle = message.toInt();
+  byte angle = message.toInt();
   if((angle >= 0) && (angle <= 180)){
     servo.write(angle);
   }else{
