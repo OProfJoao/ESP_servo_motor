@@ -3,8 +3,10 @@
 #include "ESP32Servo.h"
 #include "PubSubClient.h"
 
-
+WiFiClient client;
+PubSubClient mqttClient(client);
 Servo servo;
+
 
 const char* ssid = "iPhone";
 const char* pass = "teste123";
@@ -17,15 +19,32 @@ const char* mqtt_pass = "G4aAB&8d9Q*5wU,Zv.so";
 
 const char* topic = "servo";
 
-WiFiClient client;
-PubSubClient mqttClient(client);
+
+
+void connectToWIFI();
 
 void callback(char* topic, byte* message, unsigned int length);
-void mqttReconnect();
+void connectToBroker();
 
 void setup() {
   servo.attach(20);
+
   Serial.begin(9600);
+  connectToWIFI();
+  
+  connectToBroker();
+}
+
+void loop() {
+  if (!mqttClient.connected()) {
+    connectToBroker();
+  }
+  mqttClient.loop();
+}
+
+/*-------------------------------------------------------------------------------*/
+
+void connectToWIFI(){
   WiFi.begin(ssid, pass);
   Serial.println("Connecting to Wifi...");
   while (WiFi.status() != WL_CONNECTED) {
@@ -33,18 +52,15 @@ void setup() {
     Serial.print(".");
   }
   Serial.println("Wifi Connected");
-  mqttClient.setServer(broker, port);
-  mqttClient.setCallback(callback);
-  mqttReconnect();
-  mqttClient.subscribe(topic);
-
- 
 }
-void mqttReconnect(){
+
+void connectToBroker(){
+  mqttClient.setServer(broker, port);
   Serial.println("Connecting to the Broker...");
   while (!mqttClient.connected()) {
     if (mqttClient.connect("ESP32-Servo", mqtt_user, mqtt_pass)) {
       Serial.println(" Conectado!");
+      mqttClient.setCallback(callback);
       mqttClient.subscribe(topic);
     } else {
       Serial.print(" Falha, código: ");
@@ -54,7 +70,6 @@ void mqttReconnect(){
     }
   }
 }
-
 
 void callback(char* topic, byte* payload, unsigned int length){
   String message = "";
@@ -75,9 +90,8 @@ void callback(char* topic, byte* payload, unsigned int length){
 }
 
 
-void loop() {
-  if (!mqttClient.connected()) {
-    mqttReconnect();
-  }
-  mqttClient.loop();
-}
+
+
+
+
+
