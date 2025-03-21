@@ -7,8 +7,8 @@ WiFiClient client;
 PubSubClient mqttClient(client);
 Servo servo;
 
-const char *ssid = "iPhone";
-const char *pass = "teste123";
+const char *ssid = "TesteFerrorama";
+const char *pass = "Ferrorama1";
 
 const char *broker = "9ba2cb32944a4266a47c6f2a46d1bd26.s1.eu.hivemq.cloud";
 const int port = 8883;
