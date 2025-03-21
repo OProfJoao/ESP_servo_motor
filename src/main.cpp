@@ -2,19 +2,20 @@
 #include <WiFi.h>
 #include "ESP32Servo.h"
 #include "PubSubClient.h"
+#include "env.h"
 
 WiFiClient client;
 PubSubClient mqttClient(client);
 Servo servo;
 
-const char *ssid = "TesteFerrorama";
-const char *pass = "Ferrorama1";
+const char *ssid = WIFI_SSID;
+const char *pass = WIFI_PASSWORD;
 
-const char *broker = "9ba2cb32944a4266a47c6f2a46d1bd26.s1.eu.hivemq.cloud";
+const char *broker = MQTT_BROKER;
 const int port = 8883;
 
-const char *mqtt_user = "hivemq.webclient.1742579763796";
-const char *mqtt_pass = "G4aAB&8d9Q*5wU,Zv.so";
+const char *mqtt_user = MQTT_USER;
+const char *mqtt_pass = MQTT_PASS;
 
 const char *topic = "servo";
 
@@ -27,7 +28,7 @@ void setup()
 {
   servo.attach(20);
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   connectToWIFI();
 
   connectToBroker();
