@@ -1,7 +1,8 @@
 #include <Arduino.h>
-#include <Servo.h>
-#include "PubSubClient.h"
 #include <WiFi.h>
+#include "ESP32Servo.h"
+#include "PubSubClient.h"
+
 
 Servo servo;
 
