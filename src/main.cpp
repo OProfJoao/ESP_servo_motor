@@ -66,7 +66,7 @@ void callback(char* topic, byte* payload, unsigned int length){
   if((angle >= 0) && (angle <= 180)){
     servo.write(angle);
   }else{
-    Serial.println("Angulo inválido");
+    mqttClient.publish("servo", "Valor inválido");
   }
 }
 
