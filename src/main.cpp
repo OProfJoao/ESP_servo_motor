@@ -5,6 +5,8 @@
 #include "env.h"
 #include <WiFiClientSecure.h>
 
+#define GPIOPIN 25
+
 WiFiClientSecure client;
 PubSubClient mqttClient(client);
 Servo servo;
@@ -29,7 +31,7 @@ void connectToBroker();
 
 void setup()
 {
-  pinMode(34, OUTPUT);
+  pinMode(GPIOPIN, OUTPUT);
   servo.attach(14);
 
   Serial.begin(115200);
@@ -37,7 +39,7 @@ void setup()
   mqttClient.setServer(broker, port);
   mqttClient.setCallback(callback);
 
-  digitalWrite(34, LOW);
+  digitalWrite(GPIOPIN, LOW);
   connectToWIFI();
   connectToBroker();
 }
@@ -65,7 +67,7 @@ void connectToWIFI()
   {
     long now = millis(); 
     if(now % 50 == 0){
-      digitalWrite(34, !digitalRead(34));
+      digitalWrite(GPIOPIN, !digitalRead(GPIOPIN));
     }
     if(now % 1000 == 0){
       Serial.print("Status: ");
@@ -73,9 +75,9 @@ void connectToWIFI()
     }
   }
   Serial.println("Wifi Connected");
-  digitalWrite(34, HIGH);
+  digitalWrite(GPIOPIN, HIGH);
   delay(1000);
-  digitalWrite(34, LOW);
+  digitalWrite(GPIOPIN, LOW);
 }
 
 void connectToBroker() {
@@ -91,12 +93,12 @@ void connectToBroker() {
       mqttClient.subscribe(topic);
       Serial.print("Subscribed to topic: ");
       Serial.println(topic);
-      digitalWrite(34, HIGH);
+      digitalWrite(GPIOPIN, HIGH);
       delay(1000);
-      digitalWrite(34, LOW);
+      digitalWrite(GPIOPIN, LOW);
     } else {
       if(now % 500 == 0){
-        digitalWrite(34, !digitalRead(34));
+        digitalWrite(GPIOPIN, !digitalRead(GPIOPIN));
       }
       Serial.print("Connection failed, code: ");
       Serial.println(mqttClient.state());
