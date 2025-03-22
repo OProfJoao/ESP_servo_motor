@@ -5,7 +5,7 @@
 #include "env.h"
 #include <WiFiClientSecure.h>
 
-#define GPIOPIN 25
+#define GPIOPIN 32
 
 WiFiClientSecure client;
 PubSubClient mqttClient(client);
@@ -66,7 +66,7 @@ void connectToWIFI()
   while (WiFi.status() != WL_CONNECTED)
   {
     long now = millis(); 
-    if(now % 50 == 0){
+    if(now % 100 == 0){
       digitalWrite(GPIOPIN, !digitalRead(GPIOPIN));
     }
     if(now % 1000 == 0){
