@@ -29,6 +29,7 @@ void connectToBroker();
 
 void setup()
 {
+  pinMode(34, OUTPUT);
   servo.attach(14);
 
   Serial.begin(115200);
@@ -36,7 +37,7 @@ void setup()
   mqttClient.setServer(broker, port);
   mqttClient.setCallback(callback);
 
-
+  digitalWrite(34, LOW);
   connectToWIFI();
   connectToBroker();
 }
@@ -62,34 +63,43 @@ void connectToWIFI()
   Serial.println("Connecting to Wifi...");
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(500);
-    Serial.print(".");
-    Serial.print("Status: ");
-    Serial.println(WiFi.status());
+    long now = millis(); 
+    if(now % 50 == 0){
+      digitalWrite(34, !digitalRead(34));
+    }
+    if(now % 1000 == 0){
+      Serial.print("Status: ");
+      Serial.println(WiFi.status());
+    }
   }
   Serial.println("Wifi Connected");
+  digitalWrite(34, HIGH);
+  delay(1000);
+  digitalWrite(34, LOW);
 }
 
 void connectToBroker() {
   Serial.println("Connecting to the Broker...");
 
-  int tentativas = 0;
-  while (!mqttClient.connected() && tentativas < 5) { // Limita a 5 tentativas
+  while (!mqttClient.connected()) { // Limita a 5 tentativas
     String clientId = "ESP32-Servo-" + String(random(0xffff), HEX);
     Serial.print("Attempting connection as ");
     Serial.println(clientId);
-
+    long now = millis();
     if (mqttClient.connect(clientId.c_str(), mqtt_user, mqtt_pass)) {
       Serial.println("Connected to the Broker!");
       mqttClient.subscribe(topic);
       Serial.print("Subscribed to topic: ");
       Serial.println(topic);
+      digitalWrite(34, HIGH);
+      delay(1000);
+      digitalWrite(34, LOW);
     } else {
+      if(now % 500 == 0){
+        digitalWrite(34, !digitalRead(34));
+      }
       Serial.print("Connection failed, code: ");
       Serial.println(mqttClient.state());
-      Serial.println("Retrying in 2 seconds...");
-      delay(2000);
-      tentativas++;
     }
   }
 
