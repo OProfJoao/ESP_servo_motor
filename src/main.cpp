@@ -13,14 +13,14 @@ Servo servo;
 
 
 
-const char *ssid = "TesteFerrorama";
-const char *pass = "Ferrorama1";
+const char *ssid = wifi_ssid;
+const char *pass = wifi_password;
 
-const char *broker = "9ba2cb32944a4266a47c6f2a46d1bd26.s1.eu.hivemq.cloud";
+const char *broker = mqtt_broker;
 const int port = 8883;
 
-const char *mqtt_user = "ESPSERVO";
-const char *mqtt_pass = "!ESPservo1";
+const char *mqtt_user = mqtt_username;
+const char *mqtt_pass = mqtt_password  ;
 
 const char *topic = "servo/angle";
 
