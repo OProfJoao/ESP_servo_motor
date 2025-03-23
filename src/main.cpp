@@ -15,7 +15,7 @@ Servo servo;
 
 const char *ssid = wifi_ssid;
 const char *pass = wifi_password;
-
+  
 const char *broker = mqtt_broker;
 const int port = 8883;
 
